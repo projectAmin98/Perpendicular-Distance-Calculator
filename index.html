@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpendicular Distance Calculator | Trigonometric Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(30, 30, 40, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border: 1px solid rgba(100, 200, 255, 0.1);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, #64d8ff 0%, #a98aff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #b0c4de;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .calculator-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0c4de;
+            font-weight: 600;
+            font-size: 0.95em;
+            letter-spacing: 0.3px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 8px;
+            font-size: 1em;
+            background-color: rgba(40, 45, 60, 0.7);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #64d8ff;
+            box-shadow: 0 0 0 3px rgba(100, 216, 255, 0.15);
+            background-color: rgba(40, 45, 60, 0.9);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 8px;
+            font-size: 1em;
+            background-color: rgba(40, 45, 60, 0.7);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #64d8ff;
+            box-shadow: 0 0 0 3px rgba(100, 216, 255, 0.15);
+            background-color: rgba(40, 45, 60, 0.9);
+        }
+
+        option {
+            background-color: #1e2838;
+            color: #ffffff;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, rgba(100, 216, 255, 0.1) 0%, rgba(169, 138, 255, 0.1) 100%);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 20px rgba(100, 216, 255, 0.1);
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            color: #b0c4de;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #64d8ff 0%, #a98aff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-unit {
+            font-size: 0.9em;
+            color: #9eb3d4;
+            font-weight: 500;
+        }
+
+        canvas {
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 12px;
+            display: block;
+            width: 100%;
+            height: auto;
+            background: rgba(20, 25, 35, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .visualization-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            color: #e6f2ff;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-box {
+            background: rgba(40, 45, 60, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 3px solid #64d8ff;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+        }
+
+        .formula-title {
+            font-weight: 600;
+            color: #64d8ff;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            color: #b0c4de;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: rgba(40, 45, 60, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 3px solid #a98aff;
+            border: 1px solid rgba(169, 138, 255, 0.2);
+            font-size: 0.9em;
+            color: #b0c4de;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .result-value {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 Perpendicular Distance Calculator</h1>
+        <p class="subtitle">Calculate perpendicular offset distance using trigonometric principles</p>
+
+        <div class="calculator-section">
+            <div>
+                <div class="input-group">
+                    <label for="distance">📏 Base Distance (AB):</label>
+                    <input type="number" id="distance" value="100" min="0" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="degree">📐 Angle at Point A (θ):</label>
+                    <input type="number" id="degree" value="45" min="0" max="90" step="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="unit">📊 Measurement Unit:</label>
+                    <select id="unit">
+                        <option value="mm">Millimeters (mm)</option>
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="m" selected>Meters (m)</option>
+                    </select>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula-title">⚡ Trigonometric Formula</div>
+                    <div class="formula">
+                        BC = AB × tan(θ)
+                        <br><br>
+                        Where:<br>
+                        • AB = base distance between points<br>
+                        • θ = angle at point A (∠BAC)<br>
+                        • ∠ABC = 90° (perpendicular)<br>
+                        • BC = perpendicular offset
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>📊 Configuration:</strong><br>
+                    • Points A and B define the base line<br>
+                    • Point C forms a 90° angle at B<br>
+                    • Creates a right triangle (ABC)<br>
+                    • Perfect for offset calculations
+                </div>
+            </div>
+
+            <div>
+                <div class="result-box">
+                    <div class="result-label">⟂ Perpendicular Distance (BC)</div>
+                    <div class="result-value" id="result">0</div>
+                    <div class="result-unit" id="resultUnit">m</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-section">
+            <div class="section-title">📈 Interactive Geometry Visualization</div>
+            <canvas id="canvas" width="800" height="500"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const distanceInput = document.getElementById('distance');
+        const degreeInput = document.getElementById('degree');
+        const unitSelect = document.getElementById('unit');
+        const resultElement = document.getElementById('result');
+        const resultUnitElement = document.getElementById('resultUnit');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function calculate() {
+            const distanceAB = parseFloat(distanceInput.value) || 0;
+            const angleA = parseFloat(degreeInput.value) || 0;
+            const unit = unitSelect.value;
+            
+            // Limit angle to reasonable range
+            if (angleA > 90) {
+                degreeInput.value = 90;
+                return;
+            }
+            if (angleA < 0) {
+                degreeInput.value = 0;
+                return;
+            }
+            
+            // Convert degree to radians
+            const radians = angleA * Math.PI / 180;
+            
+            // Calculate BC using right triangle trigonometry
+            // In right triangle ABC where angle ABC = 90°:
+            // tan(angle A) = BC / AB
+            // Therefore: BC = AB × tan(angle A)
+            const distanceBC = distanceAB * Math.tan(radians);
+            
+            resultElement.textContent = distanceBC.toFixed(2);
+            resultUnitElement.textContent = unit;
+            
+            drawVisualization(distanceAB, angleA, distanceBC, unit);
+        }
+
+        function drawVisualization(distanceAB, angleA, distanceBC, unit) {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Set up coordinates
+            const margin = 80;
+            const scale = Math.min((canvas.width - 2 * margin) / distanceAB, 
+                                   (canvas.height - 2 * margin) / Math.max(distanceBC, distanceAB));
+            
+            // Position of object A (left side)
+            const Ax = margin;
+            const Ay = canvas.height - margin;
+            
+            // Position of object B (right side, aligned horizontally with A)
+            const scaledAB = distanceAB * scale;
+            const Bx = Ax + scaledAB;
+            const By = Ay;
+            
+            // Position of object C (perpendicular from B, upward)
+            const scaledBC = distanceBC * scale;
+            const Cx = Bx;
+            const Cy = By - scaledBC;
+            
+            // Draw right angle indicator at B
+            const rightAngleSize = 20;
+            ctx.beginPath();
+            ctx.moveTo(Bx - rightAngleSize, By);
+            ctx.lineTo(Bx - rightAngleSize, By - rightAngleSize);
+            ctx.lineTo(Bx, By - rightAngleSize);
+            ctx.strokeStyle = '#6b7c93';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw line AB (base)
+            ctx.beginPath();
+            ctx.moveTo(Ax, Ay);
+            ctx.lineTo(Bx, By);
+            ctx.strokeStyle = '#64d8ff';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Draw line BC (perpendicular, the result)
+            ctx.beginPath();
+            ctx.moveTo(Bx, By);
+            ctx.lineTo(Cx, Cy);
+            ctx.strokeStyle = '#ff6bcf';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Draw line AC (hypotenuse)
+            ctx.beginPath();
+            ctx.moveTo(Ax, Ay);
+            ctx.lineTo(Cx, Cy);
+            ctx.strokeStyle = '#7de7a7';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw angle arc at A
+            const arcRadius = 50;
+            const startAngle = 0;
+            const endAngle = -angleA * Math.PI / 180; // Negative for upward
+            ctx.beginPath();
+            ctx.arc(Ax, Ay, arcRadius, startAngle, endAngle, true);
+            ctx.strokeStyle = '#ffc85e';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw object A
+            ctx.beginPath();
+            ctx.arc(Ax, Ay, 16, 0, 2 * Math.PI);
+            ctx.fillStyle = '#64d8ff';
+            ctx.fill();
+            ctx.strokeStyle = '#4ac4ff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Draw object B
+            ctx.beginPath();
+            ctx.arc(Bx, By, 16, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffc85e';
+            ctx.fill();
+            ctx.strokeStyle = '#ffb83e';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Draw object C
+            ctx.beginPath();
+            ctx.arc(Cx, Cy, 16, 0, 2 * Math.PI);
+            ctx.fillStyle = '#7de7a7';
+            ctx.fill();
+            ctx.strokeStyle = '#5dd787';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Labels for objects
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Label A
+            ctx.fillStyle = '#0a2540';
+            ctx.fillText('A', Ax, Ay);
+            
+            // Label B
+            ctx.fillStyle = '#0a2540';
+            ctx.fillText('B', Bx, By);
+            
+            // Label C
+            ctx.fillStyle = '#0a2540';
+            ctx.fillText('C', Cx, Cy);
+            
+            // Distance labels
+            ctx.font = 'bold 16px Arial';
+            ctx.textBaseline = 'alphabetic';
+            
+            // Label AB distance
+            ctx.fillStyle = '#64d8ff';
+            ctx.fillText(`AB = ${distanceAB.toFixed(0)} ${unit}`, (Ax + Bx) / 2, Ay + 30);
+            
+            // Label BC distance (result)
+            ctx.fillStyle = '#ff6bcf';
+            ctx.save();
+            ctx.translate(Bx + 30, (By + Cy) / 2);
+            ctx.fillText(`BC = ${distanceBC.toFixed(2)} ${unit}`, 0, 0);
+            ctx.restore();
+            
+            // Label AC distance
+            const distanceAC = Math.sqrt(distanceAB * distanceAB + distanceBC * distanceBC);
+            ctx.fillStyle = '#7de7a7';
+            const midACx = (Ax + Cx) / 2;
+            const midACy = (Ay + Cy) / 2;
+            ctx.fillText(`AC = ${distanceAC.toFixed(2)} ${unit}`, midACx - 40, midACy - 10);
+            
+            // Angle label
+            const angleLabelX = Ax + arcRadius * 1.5 * Math.cos(-angleA * Math.PI / 180 / 2);
+            const angleLabelY = Ay + arcRadius * 1.5 * Math.sin(-angleA * Math.PI / 180 / 2);
+            ctx.fillStyle = '#ffc85e';
+            ctx.fillText(`${angleA}°`, angleLabelX, angleLabelY);
+            
+            // Right angle label
+            ctx.fillStyle = '#9eb3d4';
+            ctx.font = '14px Arial';
+            ctx.fillText('90°', Bx - 35, By - 35);
+        }
+
+        // Add event listeners
+        distanceInput.addEventListener('input', calculate);
+        degreeInput.addEventListener('input', calculate);
+        unitSelect.addEventListener('change', calculate);
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
